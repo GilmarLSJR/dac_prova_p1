@@ -1,4 +1,3 @@
 # git ignore backend
-
 node_modules/
 .env
