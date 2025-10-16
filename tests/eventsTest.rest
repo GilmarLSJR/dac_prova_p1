@@ -1,0 +1,76 @@
+@baseURL = http://localhost:3000
+
+@volunteer_Token_Ok = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiYWRvcHRlcl90cm9uQGlmcnMuY29tLmJyIiwicm9sZSI6ImFkb3B0ZXIiLCJpYXQiOjE3NTE0MDMyOTEsImV4cCI6MTc1MTQwNjg5MX0.9t69Bxa45dZUmvmFSEhaCveRhCRknNT1B1_EMGjBx-E
+
+@admin_Token_Ok = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImVtYWlsIjoiYWRtaW4xQGlmcnMuY29tLmJyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYwMzc5OTQ1LCJleHAiOjE3NjAzODM1NDV9.jYawZ38CzHn3eulyTkN57xmroTK4tyPBJSFmvuGiScI
+
+
+
+
+
+####################################################################################################
+########## ADMIN ONLY
+####################################################################################################
+
+### Login do usuário com senha correta (usuário já existente no banco)
+POST {{baseURL}}/users/public/login
+Content-Type: application/json
+
+{
+    "email": "admin1@ifrs.com.br",
+    "password": "admin1"
+}
+
+### Criar um novo evento
+POST {{baseURL}}/events/protected/post
+Content-Type: application/json
+Authorization: Bearer {{admin_Token_Ok}}
+
+{
+  "event_name": "Doação de Alimentos",
+  "event_description": "Campanha de arrecadação de alimentos não perecíveis",
+  "max_volunteers": 40
+}
+
+
+
+
+
+####################################################################################################
+########## ADMIN ONLY
+####################################################################################################
+
+### Login do admin com senha correta (usuário já existente no banco)
+POST {{baseURL}}/users/public/login
+Content-Type: application/json
+
+{
+    "email": "admin1@ifrs.com.br",
+    "password": "admin1_password"
+}
+
+### Listar todos eventos (rota protegida, requer token de usuário com role "admin")
+GET {{baseURL}}/events/protected/getAll
+Accept: application/json
+Authorization: Bearer {{admin_Token_Ok}}
+
+### Listar os eventos pelo ID (rota protegida, requer token de usuário com role "admin")
+GET {{baseURL}}/events/protected/getByID/5
+Accept: application/json
+Authorization: Bearer {{admin_Token_Ok}}
+
+### Atualizar dados do evento pelo ID (rota protegida, requer token de usuário com role "admin")
+PUT {{baseURL}}/events/protected/update/5
+Content-Type: application/json
+Authorization: Bearer {{admin_Token_Ok}}
+
+{
+    "volunteer_id":  1,
+    "event_name": "trato_animais",
+    "event_date": "2025-10-04 17:25:55"
+}
+
+### Deletar evento pelo ID (rota protegida, requer token de usuário com role "admin")
+DELETE {{baseURL}}/events/protected/delete/4
+Accept: application/json
+Authorization: Bearer {{admin_Token_Ok}}

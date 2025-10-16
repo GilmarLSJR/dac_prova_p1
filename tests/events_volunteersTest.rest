@@ -1,0 +1,26 @@
+@baseURL = http://localhost:3000
+
+@volunteer_Token_Ok = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJqdW5pb3Iuc2F1dGhpZXIxMUBnbWFpbC5jb20iLCJyb2xlIjoidm9sdW50ZWVyIiwiaWF0IjoxNzYwNTYyNzYzLCJleHAiOjE3NjA1NjYzNjN9.eeaF5-dFoGP5votldanQHa5fsBbhp_zQa0rtOnM36nU
+
+@admin_Token_Ok = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImVtYWlsIjoiYWRtaW4xQGlmcnMuY29tLmJyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYwMzc5OTQ1LCJleHAiOjE3NjAzODM1NDV9.jYawZ38CzHn3eulyTkN57xmroTK4tyPBJSFmvuGiScI
+
+
+
+### Login do voluntário com senha correta (voluntário já existente no banco)
+POST {{baseURL}}/volunteers/public/login
+Content-Type: application/json
+
+{
+    "email": "junior.sauthier11@gmail.com",
+    "password": "1234"
+}
+
+### Registrar um voluntário a um evento
+POST {{baseURL}}/events_volunteers/protected/register
+Content-Type: application/json
+Authorization: Bearer {{volunteer_Token_Ok}}
+
+{
+  "event_id": 7,
+  "volunteer_id": 8
+}

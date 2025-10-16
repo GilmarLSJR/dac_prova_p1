@@ -14,7 +14,7 @@ const helmet = require('helmet');
 const eventsProtectedRoutes = require('./routes/events/eventsProtectedRoutes');
 
 // // Importa as rotas relacionadas aos eventos - Public
-// const events_PublicRoutes = require('./routes/events/events_PublicRoutes');
+// const eventsPublicRoutes = require('./routes/events/eventsPublicRoutes');
 
 // Importa as rotas relacionadas aos voluntários - Protected
 const volunteersProtectedRoutes = require('./routes/volunteers/volunteersProtectedRoutes');
@@ -28,6 +28,12 @@ const usersProtectedRoutes = require('./routes/users/usersProtectedRoutes');
 // Importa as rotas relacionadas aos usuários - Public
 const usersPublicRoutes = require('./routes/users/usersPublicRoutes');
 
+// Importa as rotas relacionadas a tabela eventos voluntários - Protected
+const events_volunteersProtectedRoutes = require('./routes/events_volunteers/events_volunteersProtectedRoutes');
+
+// Importa as rotas relacionadas a tabela eventos voluntários - Public
+// const eventsPublicRoutes = require('./routes/events_volunteers/events_volunteersPublicRoutes');
+
 // Importa o middleware para tratamento de erros relacionado as adoções
 const events_ErrorMiddleware = require('./middlewares/events_ErrorMiddleware');
 
@@ -36,6 +42,9 @@ const volunteers_ErrorMiddleware = require('./middlewares/volunteers_ErrorMiddle
 
 // Importa o middleware para tratamento de erros relacionado aos usuários
 const users_ErrorMiddleware = require('./middlewares/users_ErrorMiddleware');
+
+// Importa o middleware para tratamento de erros relacionado aos usuários
+const events_volunteers_ErrorMiddleware = require('./middlewares/events_volunteers_ErrorMiddleware');
 
 // // Importa o middleware para tratamento de erros genéricos
 // const errorMiddleware = require('./middlewares/errorMiddleware');
@@ -57,16 +66,16 @@ app.use(helmet());
 app.use(express.json());
 
 // Rotas da aplicação
-// Define que todas as requisições iniciadas com /events/protected serão encaminhadas para o arquivo adoptions_ProtectedRoutes
+// Define que todas as requisições iniciadas com /events/protected serão encaminhadas para o arquivo events_ProtectedRoutes
 app.use('/events/protected', eventsProtectedRoutes);
 
-// // Define que todas as requisições iniciadas com /events/public serão encaminhadas para o arquivo adoptions_PublicRoutes
-// app.use('/events/public', events_PublicRoutes);
+// // Define que todas as requisições iniciadas com /events/public serão encaminhadas para o arquivo events_PublicRoutes
+// app.use('/events/public', eventsPublicRoutes);
 
-// Define que todas as requisições iniciadas com /volunteers/protected serão encaminhadas para o arquivo pets_ProtectedRoutes
+// Define que todas as requisições iniciadas com /volunteers/protected serão encaminhadas para o arquivo volunteers_ProtectedRoutes
 app.use('/volunteers/protected', volunteersProtectedRoutes);
 
-// Define que todas as requisições iniciadas com /volunteers/public serão encaminhadas para o arquivo pets_PublicRoutes
+// Define que todas as requisições iniciadas com /volunteers/public serão encaminhadas para o arquivo volunteers_PublicRoutes
 app.use('/volunteers/public', volunteersPublicRoutes);
 
 // Define que todas as requisições iniciadas com /users/protected serão encaminhadas para o arquivo user_ProtectedRoutes
@@ -74,6 +83,13 @@ app.use('/users/protected', usersProtectedRoutes);
 
 // Define que todas as requisições iniciadas com /users/public serão encaminhadas para o arquivo user_PublicRoutes
 app.use('/users/public', usersPublicRoutes);
+
+// Rotas da aplicação
+// Define que todas as requisições iniciadas com /events_volunteers/protected serão encaminhadas para o arquivo events_ProtectedRoutes
+app.use('/events_volunteers/protected', events_volunteersProtectedRoutes);
+
+// // Define que todas as requisições iniciadas com /events/public serão encaminhadas para o arquivo events_PublicRoutes
+// app.use('/events_volunteers/public', eventsPublicRoutes);
 
 // Middleware de tratamento de erros (deve ser adicionado depois das rotas)
 // Middleware que captura e trata erros, enviando respostas ao cliente - Relacionado aos events
@@ -84,6 +100,9 @@ app.use(volunteers_ErrorMiddleware);
 
 // Middleware que captura e trata erros, enviando respostas ao cliente - Relacionado aos usuários
 app.use(users_ErrorMiddleware);
+
+// Middleware que captura e trata erros, enviando respostas ao cliente - Relacionado aos events
+app.use(events_volunteers_ErrorMiddleware);
 
 // // Middleware que captura e trata erros, enviando respostas ao cliente - Genérico
 // // Esse middleware captura qualquer erro não tratado pelos middlewares anteriores

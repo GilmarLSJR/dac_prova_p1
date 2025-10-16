@@ -1,0 +1,162 @@
+@baseURL = http://localhost:3000
+
+@volunteer_Token_Ok = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJ2b2x1bnRlZXIxQGlmcnMuY29tLmJyIiwicm9sZSI6InZvbHVudGVlciIsImlhdCI6MTc1OTYxMTE4NCwiZXhwIjoxNzU5NjE0Nzg0fQ.Xg67GczT1FDlt8f7cYFm6EuKgFcfLWvaHiCe_5Csh7k
+
+@admin_Token_Ok = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJhZG1pbjFAaWZycy5jb20uYnIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTk2OTIwMTEsImV4cCI6MTc1OTY5NTYxMX0.M-m8xaNX1hKk4VR74Txs9YgDESNlBUmbKb9OW5wTa6k
+
+
+
+
+
+####################################################################################################
+########## PUBLIC
+####################################################################################################
+
+### Criar um novo usuário
+POST {{baseURL}}/users/public/create
+Content-Type: application/json
+
+{
+    "name": "admin1",
+    "email": "admin1@ifrs.com.br",
+    "password": "admin1",
+    "phone": "010101010101",
+    "role":"admin"
+}
+
+### Criar usuário com email inválido (erro esperado)
+POST {{baseURL}}/users/public/create
+Content-Type: application/json
+
+{
+    "name": "teste email invalido",
+    "email": "email_invalido"
+}
+
+### Criar usuário com email repetido (erro esperado)
+POST {{baseURL}}/users/public/create
+Content-Type: application/json
+
+{
+    "name": "admin1",
+    "email": "admin1@ifrs.com.br",
+    "password": "admin1",
+    "phone": "996821107",
+    "role": "admin"
+}
+
+### Criar outro usuário
+POST {{baseURL}}/users/public/create
+Content-Type: application/json
+
+{
+    "name": "user2",
+    "email": "user2@ifrs.com.br",
+    "password": "user2",
+    "phone": "996821107",
+    "role": "user2"
+}
+
+
+
+
+
+####################################################################################################
+########## USER ONLY
+####################################################################################################
+
+### Login do usuário com senha correta (usuário já existente no banco)
+POST {{baseURL}}/users/public/login
+Content-Type: application/json
+
+{
+    "email": "admin1@ifrs.com.br",
+    "password": "admin1"
+}
+
+### Login do usuário com senha incorreta (erro esperado)
+POST {{baseURL}}/users/public/login
+Content-Type: application/json
+
+{
+    "email": "admin1@ifrs.com.br",
+    "password": "admin1234"
+}
+
+### Listar os usuários pelo ID (rota protegida, requer token de usuário com role "admin")
+GET {{baseURL}}/users/protected/getByID/6
+Authorization: Bearer {{admin_Token_Ok}}
+
+### Atualizar dados do usuário pelo ID (rota protegida, requer token de usuário com role "admin")
+PUT {{baseURL}}/users/protected/update/6
+Content-Type: application/json
+Authorization: Bearer {{admin_Token_Ok}}
+
+{
+    "name": "admin_clu",
+    "email": "admin_clu@ifrs.com.br",
+    "password": "admin_clu",
+    "phone": "11001100",
+    "role": "admin"
+}
+
+
+
+
+
+####################################################################################################
+########## ADMIN ONLY
+####################################################################################################
+
+### Login do admin com senha correta (usuário já existente no banco)
+POST {{baseURL}}/users/public/login
+Content-Type: application/json
+
+{
+    "email": "admin1@ifrs.com.br",
+    "password": "admin1"
+}
+
+### Login do admin com senha incorreta (erro esperado)
+POST {{baseURL}}/users/public/login
+Content-Type: application/json
+
+{
+    "email": "admin1@ifrs.edu.br",
+    "password": "admin1234"
+}
+
+### Listar todos usuários (rota protegida, requer token de usuário com role "admin")
+GET {{baseURL}}/users/protected/getAll
+Authorization: Bearer {{admin_Token_Ok}}
+
+### Listar todos usuários (role incorreto - erro esperado)
+GET {{baseURL}}/users/protected/getAll
+Authorization: Bearer {{volunteer_Token_Ok}}
+
+### Listar os usuários pelo ID (rota protegida, requer token de usuário com role "admin")
+GET {{baseURL}}/users/protected/getByID/6
+Authorization: Bearer {{admin_Token_Ok}}
+
+### Atualizar dados do usuário pelo ID (rota protegida, requer token de usuário com role "admin")
+PUT {{baseURL}}/users/protected/update/6
+Content-Type: application/json
+Authorization: Bearer {{admin_Token_Ok}}
+
+{
+    "name": "admin_tron",
+    "email": "admin_tron@ifrs.com.br",
+    "password": "admin_tron",
+    "phone": "11001100",
+    "role": "admin"
+}
+
+### Deletar usuário pelo ID (rota protegida, requer token de usuário com role "admin")
+DELETE {{baseURL}}/users/protected/delete/3
+Accept: application/json
+Authorization: Bearer {{admin_Token_Ok}}
+
+### Deletar usuário pelo ID (role incorreto - erro esperado)
+DELETE {{baseURL}}/users/protected/delete/19
+Accept: application/json
+Authorization: Bearer {{volunteer_Token_Ok}}

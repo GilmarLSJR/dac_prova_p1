@@ -1,0 +1,55 @@
+@baseURL = http://localhost:3000
+
+@volunteer_Token_Ok = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJ2b2x1bnRlZXIxQGlmcnMuY29tLmJyIiwicm9sZSI6InZvbHVudGVlciIsImlhdCI6MTc1OTYxMTE4NCwiZXhwIjoxNzU5NjE0Nzg0fQ.Xg67GczT1FDlt8f7cYFm6EuKgFcfLWvaHiCe_5Csh7k
+
+@admin_Token_Ok = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJhZG1pbjFAaWZycy5jb20uYnIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTk2OTMyMjEsImV4cCI6MTc1OTY5NjgyMX0.bcg0gvNfdY-BHsggMAtLYBEYVCGEabKr3h7SJAgthEs
+
+
+
+
+
+####################################################################################################
+########## PUBLIC
+####################################################################################################
+
+### Criar um novo voluntário
+POST {{baseURL}}/volunteers/public/create
+Content-Type: application/json
+
+{
+    "name": "gilmar",
+    "email": "gilmar@ifrs.com.br",
+    "password": "1234",
+    "phone": "010101010101"
+}
+
+### Criar voluntário com email inválido (erro esperado)
+POST {{baseURL}}/volunteers/public/create
+Content-Type: application/json
+
+{
+    "name": "teste email invalido",
+    "email": "email_invalido"
+}
+
+### Criar voluntário com email repetido (erro esperado)
+POST {{baseURL}}/volunteers/public/create
+Content-Type: application/json
+
+{
+    "name": "gilmar",
+    "email": "gilmar@ifrs.com.br",
+    "password": "123456789",
+    "phone": "996821107"
+}
+
+### Criar outro voluntário
+POST {{baseURL}}/volunteers/public/create
+Content-Type: application/json
+
+{
+    "name": "volunteer2",
+    "email": "volunteer2@ifrs.com.br",
+    "password": "volunteer2",
+    "phone": "996821107"
+}

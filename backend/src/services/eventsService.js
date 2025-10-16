@@ -1,11 +1,16 @@
-// Importa o Model responsável pelo acesso ao banco de dados (tabela events)
-const eventsModel = require('../models/eventsModel');
+// Biblioteca para criptografia de senhas
+const bcrypt = require('bcryptjs');
 
-// Importa o Model responsável pelo acesso ao banco de dados (tabela users)
-const usersModel = require('../models/usersModel');
+// Importa o Model responsável pelo acesso ao banco de dados (tabela events)
+const EventsModel = require('../models/eventsModel');
+
+// // Importa o Model responsável pelo acesso ao banco de dados (tabela users)
+// const UsersModel = require('../models/usersModel');
+
+// Importa a função utilitária que valida o formato de e-mail
+const validateEmail = require('../utils/validateEmail');
 
 class EventsService {
-
   // Busca todos eventos cadastrados
   static async getAll() {
     console.log('events_service_getAll');
@@ -23,30 +28,49 @@ class EventsService {
   }
 
   // Cria um novo evento após validações
-  static async create(adoption) {
+  static async create(event) {
     console.log('events_service_create');
-    //////////
-    //////////
-    //////////
-    //////////
-    //////////
-    // Verifica condições do pet antes de fazer a adoção
-    const pet = await PetsModel.findByID(adoption.pet_id);
-    if (!pet) {
-      throw new Error('Pet não encontrado'); // Erro se não encontrar o pet
-    }
-
-    if (pet.status !== 'available') {
-      throw new Error('Pet não está disponível para adoção'); // Erro se o pet não está disponível
-    }
 
     // Se estiver disponível, prossegue com a criação
     const novoEvento = await EventsModel.create(event);
 
-    // Atualiza o status do pet para "adopted"
-    await PetsModel.updateStatus(event.pet_id, 'adopted');
-
     return novoEvento;
+  }
+
+  // Atualiza informações de um evento existente
+  static async update(id, users) {
+    console.log('events_service_update');
+    const { email, password } = users;
+
+    if (!validateEmail(email)) {
+      throw new Error('Formato de email inválido.'); // Verifica o formato do e-mail
+    }
+
+    const existingUsers = await EventsModel.findByEmail(email);
+    if (existingUsers) {
+      throw new Error('Email já cadastrado.'); // Impede cadastro de e-mails duplicados
+    }
+    // Criptografa a senha antes de salvar no banco
+    const hashed = await bcrypt.hash(password, 10);
+
+    // Substitui a senha original pela criptografada
+    users.password = hashed;
+
+    const updatedRows = await EventsModel.update(id, users);
+    if (updatedRows === 0) {
+      throw new Error('Evento não encontrado.'); // Caso nenhum evento tenha sido atualizado
+    }
+    return updatedRows;
+  }
+
+  // Deleta um evento pelo ID
+  static async delete(id) {
+    console.log('events_service_delete');
+    const deletedRows = await EventsModel.delete(id);
+    if (deletedRows === 0) {
+      throw new Error('Evento não encontrado.'); // Caso nenhum evento tenha sido deletado
+    }
+    return deletedRows;
   }
 }
 

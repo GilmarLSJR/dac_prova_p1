@@ -7,11 +7,22 @@ API RESTfull para gerenciar eventos voluntários
 - Express
 - nodemon
 - MySQL
+- morgan
+- jsonwebtoken
+- bcryptjs
+- cors
+- helmet
+- dotenv
+- eslint
+- prettier
 
 ## Tecnologias frontend :upside_down_face:
 - React
 - Vite
-- Virtualdom
+- Virtual dom
+- Router dom
+- axios
+- jwt decode
 
 # Dependências BACKEND :bone::bone::bone:
 

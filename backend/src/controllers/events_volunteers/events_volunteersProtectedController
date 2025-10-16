@@ -1,0 +1,52 @@
+// Importa o serviço responsável pela lógica de negócio dos eventos
+const EventsService = require('../../services/events_volunteersService');
+
+class EventsVolunteersController {
+  // Lista todos os eventos disponíveis
+  static async getAll(req, res) {
+    console.log('events_volunteersProtectedController_getAll');
+    try {
+      const events = await EventsService.getAll(); // Busca todos os eventos
+      res.json(events); // Retorna em JSON
+    } catch (error) {
+      res.status(500).json({ error: error.message }); // Erro interno do servidor
+    }
+  }
+
+  // Busca um evento específico pelo ID
+  static async getByID(req, res) {
+    console.log('events_volunteersProtectedController_getByID');
+    try {
+      const id = req.params.id; // ID do evento na URL
+      const event = await EventsService.getByID(id); // Busca o evento
+      if (!event) {
+        return res.status(404).json({ error: 'Evento não encontrado.' });
+      }
+      res.json(event);
+    } catch (error) {
+      res.status(400).json({ error: error.message }); // Erro de requisição
+    }
+  }
+
+  // Registra o voluntário autenticado em um evento
+  static async register(req, res) {
+    console.log('events_volunteersProtectedController_register');
+    try {
+      const volunteer_id = req.user.id; // ID do voluntário vindo do token JWT
+      const { event_id } = req.body; // ID do evento vindo do corpo da requisição
+
+      if (!event_id) {
+        return res.status(400).json({ error: 'ID do evento é obrigatório.' });
+      }
+
+      await EventsService.registerVolunteer(event_id, volunteer_id);
+      res
+        .status(201)
+        .json({ message: 'Voluntário registrado no evento com sucesso.' });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+}
+
+module.exports = EventsVolunteersController;
